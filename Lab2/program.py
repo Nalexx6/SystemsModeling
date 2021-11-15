@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib import image
 
 
-def moore_penrose(A, delta=1, e=1e-10):
+def moore_penrose(A, delta=1e-5, e=1e-10):
     A = np.array(A, dtype=float)
     aT = A.T
     aaT = A @ aT
@@ -48,8 +48,10 @@ if __name__ == "__main__":
     plt.imshow(X, cmap='gray')
     plt.show()
 
-    A_moore = Y @ moore_penrose(X)
-    A_greville = Y @ greville(X)
+    MP = moore_penrose(X)
+    G = greville(X)
+    A_moore = Y @ MP
+    A_greville = Y @ G
 
     plt.imshow(Y, cmap='gray')
     plt.show()
@@ -57,3 +59,17 @@ if __name__ == "__main__":
     plt.show()
     plt.imshow(A_greville @ X, cmap='gray')
     plt.show()
+
+    print("Faults")
+    print("Moore Penrose ", np.linalg.norm(X @ MP @ X - X))
+    print("Moore Penrose ", np.linalg.norm(MP @ X @ MP - MP))
+    print("Moore Penrose ", np.linalg.norm(X @ MP - (X @ MP).T))
+    print("Moore Penrose ", np.linalg.norm(MP @ X - (MP @ X).T))
+
+    print("Greville ", np.linalg.norm(X @ G @ X - X))
+    print("Greville ", np.linalg.norm(G @ X @ G - G))
+    print("Greville ", np.linalg.norm(X @ G - (X @ G).T))
+    print("Greville ", np.linalg.norm(G @ X - (G @ X).T))
+
+
+
